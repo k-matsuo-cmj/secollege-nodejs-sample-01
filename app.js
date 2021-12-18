@@ -59,3 +59,10 @@ function getMySQLConnection() {
     database: 'node_sample'
   });
 }
+
+// view engineにejsを指定する
+app.set('view engine', 'ejs');
+// hello.ejsを表示
+app.get('/hello', function (req, res, next) {
+  res.render('hello', { name: '田中' });
+});
