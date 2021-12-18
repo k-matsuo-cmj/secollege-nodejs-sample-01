@@ -10,23 +10,52 @@ app.get("/", function (req, res, next) {
   res.send('こんにちは！！');
 });
 
-// 名前リスト
-const nameList = [
-  { id: "1", name: "山田", address: "東京都" },
-  { id: "2", name: "鈴木", address: "千葉県" }
-];
 // 名前リストを取得するAPI
-app.get("/api/names/list", function (req, res, next){
-  res.json(nameList);
+app.get("/api/names/list", function (req, res, next) {
+  // データベースから取得
+  const connection = getMySQLConnection();
+  // 接続
+  connection.connect((err) => {
+    if (err) {
+      console.log(`error connecting: ${err.stack}`);
+      return;
+    }
+    console.log('success');
+  });
+  // クエリの発行
+  connection.query(
+    'SELECT * FROM names', (error, results) => {
+      res.json(results); // エラー処理割愛
+    }
+  );
 });
 // 名前リストを個別取得
 app.get("/api/names/:nameId", function (req, res, next) {
-  let name;
-  for (let i = 0; i < nameList.length; i++) {
-    if (nameList[i].id == req.params.nameId) {
-      name = nameList[i];
-      break;
+  // データベースから取得
+  const connection = getMySQLConnection();
+  // 接続
+  connection.connect((err) => {
+    if (err) {
+      console.log(`error connecting: ${err.stack}`);
+      return;
     }
-  }
-  res.json(name);
+    console.log('success');
+  });
+  // クエリの発行
+  connection.query(
+    'SELECT * FROM names WHERE id = ?', [req.params.nameId], (error, results) => {
+      res.json(results); // エラー処理割愛
+    }
+  );
 });
+
+// データベースコネクション取得
+function getMySQLConnection() {
+  const mysql = require("mysql");
+  return mysql.createConnection({
+    host: 'localhost',
+    user: 'seplus',
+    password: 'seplus',
+    database: 'node_sample'
+  });
+}
