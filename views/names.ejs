@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>名前リストです</h1>
+    <table border="1">
+      <% names.forEach(function(row){ %>
+        <tr>
+          <td><%= row.name %></td>
+          <td><%= row.address %></td>
+        </tr>
+      <% }) %>
+    </table>
+  </body>
+</html>

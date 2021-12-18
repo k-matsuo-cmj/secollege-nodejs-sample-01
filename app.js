@@ -66,3 +66,23 @@ app.set('view engine', 'ejs');
 app.get('/hello', function (req, res, next) {
   res.render('hello', { name: '田中' });
 });
+
+// apiでなく、画面でリストを作成する
+app.get('/names', function (req, res, next) {
+  // データベースから取得
+  const connection = getMySQLConnection();
+  // 接続
+  connection.connect((err) => {
+    if (err) {
+      console.log(`error connecting: ${err.stack}`);
+      return;
+    }
+    console.log('success');
+  });
+  // クエリの発行
+  connection.query(
+    'SELECT * FROM names', (error, results) => {
+      res.render('names', { names: results });
+    }
+  );
+});
